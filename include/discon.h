@@ -18,7 +18,7 @@
 #define MAX_EMBED_LEN MAX_EMBEDS * (MAX_STR * 3 + MAX_UINT_STRLEN)
 #define MAX_JSON MAX_MSG + 1 + MAX_EMBED_LEN // > 4 KB
 
-#define COLRGB(r, g, b) ((r) << 31 | (g) << 16 | b)
+#define COLRGB(r, g, b) ((r) << 16 | (g) << 8 | b)
 
 //Use _Generic if possible later on
 #define SERIALIZE_FIELD(buffer, object, field) \
@@ -27,14 +27,22 @@
 #define SERIALIZE_FIELD_UINT(buffer, object, field) \
     concat((buffer), "\"%s\":\"%u\",", #field, object.field)
 
+#define CMD_ARGS                    \
+    const char *cline_args[] = {    \
+        "--help", "--text",         \
+        "--embeds", "--embed-msg"   \
+    }
+
 typedef struct curl_slist curl_slist;
 typedef unsigned int colour_val;
 
 typedef struct _Embed embed;
 typedef struct _Message message;
-typedef enum _BooleanVal Bool;
 
-enum _BooleanVal { 
+typedef enum _Boolean_Val Bool;
+typedef enum _Cmd_Args cargs;
+
+enum _Boolean_Val { 
     False, 
     True 
 };
@@ -51,12 +59,19 @@ enum _Embed_Flags {
     EB_COL = 0x08
 };
 
+enum _Cmd_Args {
+    CMD_HELP,
+    CMD_TEXT,
+    CMD_EMBEDS,
+    CMD_EMBED_TEXT
+};
+
 struct _Embed {
     char title[MAX_STR],
          description[MAX_STR],
          url[MAX_STR];
     
-    colour_val colour;
+    colour_val color;
 
     int flags;
 };
@@ -71,10 +86,19 @@ struct _Message {
 //Utilities
 char *serialize_message(message msg);
 char *serialize_embed(embed eb);
+char *get_current_date(void);
 void getline(char *buffer, size_t max);
+int concat(char *buffer, const char *fmt, ...);
+cargs match_carg(char *strrep);
 
 //HTTP procedures
 curl_slist *setup(CURL *curl_inst, const char *req_url);
 void perform(CURL *curl_inst);
+
+//Message utilities
+embed make_embed(void);
+message make_text_msg(Bool is_embedded);
+void send_embed(CURL *curl_inst, embed to_send);
+void send_text_msg(CURL *curl_inst, message to_send);
 
 #endif //__DISCON_H__
