@@ -1,5 +1,9 @@
 #include "../include/discon.h"
+
+#include <time.h>
 #include <stdarg.h>
+
+CMD_ARGS;
 
 int concat(char *buffer, const char *fmt, ...) {
     va_list ls;
@@ -24,6 +28,22 @@ void getline(char *buffer, size_t max) {
     }
 }
 
+cargs match_carg(char *strrep) {
+    for(int i = 0; i < sizeof(cline_args) / sizeof(char*); i++)
+        if(!strcmp(strrep, cline_args[i]))
+            return i;
+
+    return -1;
+}
+
+char *get_current_date(void) {
+    time_t curr_time = time(NULL);
+    char *date = ctime(&curr_time);
+
+    date[strlen(date) - 1] = '\0';
+    return date;
+}
+
 char *serialize_embed(embed eb) {
     char *embed_str = calloc(MAX_EMBED_LEN, sizeof(char));
     embed_str[0] = '{';
@@ -31,7 +51,7 @@ char *serialize_embed(embed eb) {
     if(eb.flags & EB_TITLE) SERIALIZE_FIELD(embed_str, eb, title);
     if(eb.flags & EB_DESC) SERIALIZE_FIELD(embed_str, eb, description);
     if(eb.flags & EB_URL) SERIALIZE_FIELD(embed_str, eb, url);
-    if(eb.flags & EB_COL) SERIALIZE_FIELD_UINT(embed_str, eb, colour);
+    if(eb.flags & EB_COL) SERIALIZE_FIELD_UINT(embed_str, eb, color);
 
     size_t len = strlen(embed_str);
     if(embed_str[len - 1] == ',')
