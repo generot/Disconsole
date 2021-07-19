@@ -27,6 +27,9 @@
 #define SERIALIZE_FIELD_UINT(buffer, object, field) \
     concat((buffer), "\"%s\":\"%u\",", #field, object.field)
 
+#define ISSUE_ERROR(fmt, ...) \
+    fprintf(stderr, (fmt)__VA_OPT__(,)__VA_ARGS__)
+
 #define CMD_ARGS                    \
     const char *cline_args[] = {    \
         "--help", "--text",         \
