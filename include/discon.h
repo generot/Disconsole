@@ -30,7 +30,8 @@
 #define CMD_ARGS                    \
     const char *cline_args[] = {    \
         "--help", "--text",         \
-        "--embeds", "--embed-msg"   \
+        "--embeds", "--embed-msg",  \
+        "--send-arg"                \
     }
 
 typedef struct curl_slist curl_slist;
@@ -63,7 +64,8 @@ enum _Cmd_Args {
     CMD_HELP,
     CMD_TEXT,
     CMD_EMBEDS,
-    CMD_EMBED_TEXT
+    CMD_EMBED_TEXT,
+    CMD_PASS_ARG
 };
 
 struct _Embed {
