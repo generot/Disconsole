@@ -1,12 +1,12 @@
 #include "../include/discon.h"
 
 void print_help(void) {
-    printf(
+    ISSUE_ERROR(
         "--help: prints this list\n"
         "--text: initializes Disconsole in text message mode\n"
         "--embeds: initializes Disconsole in embed mode\n"
         "--embed-msg: embeds a text message\n"
-        "--send-arg: sends the following argument(Example: ./discon --send-arg \"To be sent\")" 
+        "--send-arg: sends the following argument(Example: ./discon --send-arg \"To be sent\")"
     );
 
     exit(EXIT_SUCCESS);
@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
         scanf("%d", &num_of_msgs);
 
         if(num_of_msgs > 10) {
-            fprintf(stderr, "[%s - ERROR]: Maximum number of embeds exceeded.", get_current_date());
+            ISSUE_ERROR("[%s - ERROR]: Maximum number of embeds exceeded.", get_current_date());
             break;
         }
 
@@ -54,14 +54,14 @@ int main(int argc, char **argv) {
         break;
     case CMD_PASS_ARG:
         if(argc < 3) {
-            fprintf(stderr, "[%s - ERROR]: This option requires an additional argument, "
+            ISSUE_ERROR("[%s - ERROR]: This option requires an additional argument, "
                             "containing the data to be sent.", get_current_date());
 
             break;
         }
 
         message new_msg = { .flags = DMS_TEXT };
-        strcpy(new_msg.content, argv[2]);
+        concat(new_msg.content, "```%s```", argv[2]);
 
         send_text_msg(curl_inst, new_msg);
 
