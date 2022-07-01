@@ -5,7 +5,7 @@ A simple C console interface that lets you send messages to a Discord channel vi
 - Adding the following options to the compilation batch file:<br>
   - `-DDC_TOKEN=<your_webhook_token> -DDC_ID=<your_webhook_id>`
 
-Both options are completely valid, it's up to you to choose which one is most convenient for you.
+Both options are completely valid, it's up to you to choose which one is more convenient for you.
 
 ## Dependencies
 - [libcurl](https://curl.se/libcurl/c/)
